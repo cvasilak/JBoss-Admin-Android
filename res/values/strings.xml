@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">JBoss Admin</string>
+
+    <string name="icon">icon</string>
+
+    <!--  Shared -->
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="refresh">Refresh</string>
+    <string name="cancel">Cancel</string>
+    <string name="description">Description</string>
+    <string name="logout">Logout</string>
+
+    <string name="action">Action</string>
+    <string name="action_enable">Enable</string>
+    <string name="action_disable">Disable</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_upload">Upload</string>
+    <string name="action_add_to_group">Add to Group</string>
+    <string name="save">Save</string>
+    <string name="done">Done</string>
+    <string name="next">Next</string>
+
+    <string name="dialog_error_title">Error!</string>
+    <string name="dialog_server_reply_title">Server Reply</string>
+    <string name="dialog_button_OK">OK</string>
+    <string name="dialog_button_Bummer">Bummer</string>
+    <string name="dialog_button_YES">Yes</string>
+    <string name="dialog_button_NO">No</string>
+    <string name="dialog_confirm_action_title">Confirm %1$s</string>
+    <string name="dialog_confirm_action_body">Are you sure you want to %1$s %2$s?</string>
+
+    <string name="deployment_added">Successfully added!</string>
+    <string name="deployment_deleted">Successfully deleted!</string>
+    <string name="deployment_enabled">Successfully enabled!</string>
+    <string name="deployment_disabled">Successfully disabled!</string>
+
+    <string name="success">Success!</string>
+    <string name="failed">Failed!</string>
+
+    <string name="add_to_group_enable">Add to Group and Enable</string>
+    <string name="add_to_group">Add to Group</string>
+
+    <string name="click_to_edit">
+        <i>Click to Edit</i>
+    </string>
+
+    <!--  RuntimeViewFragment Messages -->
+    <string name="select_host">Select Host</string>
+    <string name="select_server">Select Server</string>
+
+    <!--  ProfileViewFragment Messages -->
+    <string name="attributes">Attributes</string>
+    <string name="child_types">Child Types</string>
+    <string name="operations">Operations</string>
+
+    <!--  ServerDetailActivity -->
+    <string name="name">Name:</string>
+    <string name="hostname">Hostname:</string>
+    <string name="port">Port:</string>
+    <string name="isSSLSecured">Use SSL:</string>
+    <string name="username">Username:</string>
+    <string name="password">Password:</string>
+    <string name="execute">Execute</string>
+    <string name="not_enough_params">Please complete at least Hostname and Port fields!</string>
+    <string name="error_on_save">An error occurred during save!</string>
+    <string name="new_server">New Server</string>
+    <string name="default_port">9990</string>
+
+    <!--  ConfigurationViewFragment Messages -->
+    <string name="configuration">Configuration</string>
+
+    <!--  ExtensionsViewFragment Messages -->
+    <string name="extensions">Extensions</string>
+
+    <!--  PropertiesViewFragment Messages -->
+    <string name="properties">Properties</string>
+
+    <!--  JVMMetricsViewFragment Messages -->
+    <string name="jvm">JVM</string>
+
+    <!--  DataSourcesViewFragment Messages -->
+    <string name="data_sources">Data Sources</string>
+
+    <!--  JMSTypeSelectorViewFragment Messages -->
+    <string name="jms_destinations">JMS Destinations</string>
+
+    <!--  JMSQueuesViewFragment Messages -->
+    <string name="jms_queues">JMS Queues</string>
+
+    <!--  JMSTopicsViewFragment Messages -->
+    <string name="jms_topics">JMS Topics</string>
+
+    <!--  TransactionMetricsViewFragment Messages -->
+    <string name="transactions">Transactions</string>
+
+    <!--  WebConnectorTypeSelectorViewFragment Messages -->
+    <string name="web_connector">Web Connector</string>
+
+    <!--  DeploymentsViewFragment Messages -->
+    <string name="repository">Repository</string>
+    <string name="deployments">Deployments</string>
+    <string name="upload_deployment_step1">Step1/2: Upload</string>
+    <string name="upload_deployment_step2">Step2/2: Verify</string>
+    <string name="deployment_schedule_to_upload">Scheduled to upload!</string>
+    <string name="directory_empty_title">Directory Empty!</string>
+    <string name="directory_empty_msg">Please upload your artifacts in \'%1$s\'</string>
+    <string name="add_deployment_from_repository">Content Repository:</string>
+    <string name="add_deployment_to_group">Add to Group:</string>
+
+    <!--  DomainServerGroupsViewFragment Messages -->
+    <string name="server_groups">Server Groups</string>
+
+    <!--  DeploymentDetailsDialogFragment Messages -->
+    <string name="key">Key:</string>
+    <string name="runtimeName">Runtime Name:</string>
+    <string name="missing_params">Please complete at least Name and Runtime Name!</string>
+
+    <!--  ChildResourcesViewFragment Messages -->
+    <string name="child_resources">Child Resources</string>
+    <string name="generic_operations">Generic Operations</string>
+
+    <!--  ProgressDialog Common Messages -->
+    <string name="fetchingDomainInfo">Fetching domain information, please wait..</string>
+    <string name="queryingServer">Querying server, please wait..</string>
+    <string name="applyingAction">Applying action, please wait..</string>
+    <string name="enablingDeployment">Enabling deployment, please wait..</string>
+
+    <!--  ListEditor Messages -->
+    <string name="unedited_field">Some rows have no value set, please either enter some value or delete the row before
+        you proceed!
+    </string>
+
+    <!--  Talk2JBossServerTask Messages -->
+    <string name="empty_response">Empty response received from server!</string>
+    <string name="invalid_response">Invalid Response from server!</string>
+
+    <!--  UploadToJBossServerService -->
+    <string name="notif_ticker">Uploading \'%1$s\'</string>
+    <string name="notif_title">%1$s</string>
+
+    <string name="notif_content_init">Initializing upload</string>
+    <string name="notif_content">%1$s%% completed.</string>
+
+    <string name="notif_title_uploaded">Successfully Uploaded!</string>
+    <string name="notif_content_uploaded">Tap to set details for \'%1$s\'</string>
+
+</resources>

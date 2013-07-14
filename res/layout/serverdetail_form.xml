@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+    <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1"
+            android:shrinkColumns="1"
+            >
+
+        <TableRow>
+            <TextView android:text="@string/name"/>
+            <EditText android:id="@+id/name" android:singleLine="true" android:inputType="textNoSuggestions"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView android:text="@string/hostname"/>
+            <EditText android:id="@+id/hostname" android:singleLine="true" android:inputType="textNoSuggestions"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView android:text="@string/port"/>
+            <EditText android:id="@+id/port" android:inputType="number|textNoSuggestions"
+                      android:text="@string/default_port"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView android:text="@string/isSSLSecured"/>
+            <CheckBox android:id="@+id/isSSLSecured" android:checked="false"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView android:text="@string/username"/>
+            <EditText android:id="@+id/username" android:singleLine="true" android:inputType="textNoSuggestions"/>
+        </TableRow>
+
+        <TableRow>
+            <TextView android:text="@string/password"/>
+            <EditText android:id="@+id/password" android:singleLine="true" android:inputType="textPassword"/>
+        </TableRow>
+
+    </TableLayout>
+
+</ScrollView>

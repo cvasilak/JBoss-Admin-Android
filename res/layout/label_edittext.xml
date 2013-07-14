@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+    <ImageView
+            android:id="@+id/row_star_icon"
+            android:src="@drawable/ic_star"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:visibility="invisible"
+            android:contentDescription="@string/icon"/>
+
+    <TextView
+            android:id="@+id/label"
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
+
+    <EditText
+            android:id="@+id/value"
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/icon"
+            android:singleLine="true" android:inputType="none"/>
+
+    <ImageView
+            android:id="@+id/row_info_icon"
+            android:src="@drawable/ic_info"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/icon"
+            android:visibility="invisible"/>
+
+</LinearLayout>
