@@ -57,6 +57,9 @@
     <string name="child_types">Child Types</string>
     <string name="operations">Operations</string>
 
+    <!--  ServersViewFragment -->
+    <string name="empty_server_list">No servers configured, please add one!</string>
+
     <!--  ServerDetailActivity -->
     <string name="name">Name:</string>
     <string name="hostname">Hostname:</string>

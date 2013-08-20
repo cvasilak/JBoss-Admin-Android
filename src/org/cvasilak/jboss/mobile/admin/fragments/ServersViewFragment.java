@@ -82,6 +82,7 @@ public class ServersViewFragment extends SherlockListFragment {
 
         adapter = new ServerAdapter(serversManager.getServers());
         setListAdapter(adapter);
+        setEmptyText(getString(R.string.empty_server_list));
 
         getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
