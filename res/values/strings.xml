@@ -60,7 +60,7 @@
     <!--  ServersViewFragment -->
     <string name="empty_server_list">No servers configured, please add one!</string>
 
-    <!--  ServerDetailActivity -->
+    <!--  ServerEditFragment -->
     <string name="name">Name:</string>
     <string name="hostname">Hostname:</string>
     <string name="port">Port:</string>
