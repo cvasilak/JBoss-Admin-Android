@@ -49,22 +49,8 @@ public class ServersManager {
         servers = new ArrayList<Server>();
 
         // if file does not exist start from scratch
-        if (!context.getFileStreamPath("servers.archive").exists()) {
-            // TODO
-            // to be removed once in production
-            // add testbed 'cvasilak.org'
-            Server server = new Server();
-            server.setName("testbed server");
-            server.setHostname("cvasilak.org");
-            server.setUsername("tester");
-            server.setPassword("123456a!!");
-            server.setPort(9990);
-
-            servers.add(server);
-            save();
-
+        if (!context.getFileStreamPath("servers.archive").exists())
             return;
-        }
 
         Log.d(TAG, "initializing servers list from servers.archive file");
 
