@@ -2,7 +2,7 @@
 
 ### JBoss Admin _(for Android)_
 
-The app will allow you to remotely administer a JBoss 7.x / EAP 6 server using the server's exposed http management interface.
+The app will allow you to remotely administer a JBoss 7 or JBoss EAP 6.1 server using the server's exposed http management interface.
 
 Features
 --------
