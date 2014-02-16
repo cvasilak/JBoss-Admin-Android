@@ -22,6 +22,7 @@ proguard_logs/
 # 
 ant.properties
 build.xml
+.DS_Store
 
 ########## Intellij #########
 
