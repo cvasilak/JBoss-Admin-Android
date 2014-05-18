@@ -23,7 +23,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>apk</packaging>
     <name>JBoss Admin</name>
-    <description>Android app to manage a JBoss 7.x app server and JBoss EAP 6.1.0</description>
+    <description>Android app to manage a JBoss 7, WildFly and JBoss EAP server</description>
 
     <url>http://github.com/cvasilak/JBoss-Admin-Android</url>
 
@@ -52,8 +52,22 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <proguard.skip>true</proguard.skip>
-        <android.avd>17</android.avd>
         <debug>true</debug>
+        
+        <android.version>4.4.2_r3</android.version>
+        <android.support.version>19.1.0</android.support.version>
+        <android.platform>19</android.platform>
+        <android.debug>true</android.debug>
+        
+        <httpmime.version>4.0.1</httpmime.version>
+        <sherlock.version>4.4.0</sherlock.version>
+        <sortlistview.version>0.6.1-SNAPSHOT</sortlistview.version>
+        <gson.version>2.2.4</gson.version>
+        
+        <!-- Plugin properties-->
+        <maven.android.plugin.verson>3.8.0</maven.android.plugin.verson>
+        <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
+        <java.version>1.6</java.version>
     </properties>
 
     <profiles>
@@ -72,7 +86,7 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>${maven.android.plugin.verson}</version>
                     <extensions>true</extensions>
                 </plugin>
             </plugins>
@@ -81,10 +95,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
 
@@ -93,13 +107,13 @@
                 <artifactId>android-maven-plugin</artifactId>
                 <configuration>
                     <run>
-                        <debug>${debug}</debug>
+                        <debug>${android.debug}</debug>
                     </run>
                     <sdk>
-                        <platform>17</platform>
+                        <platform>${android.platform}</platform>
                     </sdk>
                     <emulator>
-                        <avd>${android.avd}</avd>
+                        <avd>${android.platform}</avd>
                     </emulator>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
                     <proguard>
@@ -114,20 +128,20 @@
         <dependency>
             <groupId>android</groupId>
             <artifactId>android</artifactId>
-            <version>4.2.2_r2</version>
+            <version>${android.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>android.support</groupId>
             <artifactId>compatibility-v4</artifactId>
-            <version>18</version>
+            <version>${android.support.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
-            <version>4.0.1</version>
+            <version>${httpmime.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -147,7 +161,7 @@
         <dependency>
             <groupId>com.actionbarsherlock</groupId>
             <artifactId>actionbarsherlock</artifactId>
-            <version>4.4.0</version>
+            <version>${sherlock.version}</version>
             <exclusions>
                 <!-- exclude android-support lib since it is already
                  defined as dependency from android-maven-sdk-->
@@ -162,14 +176,14 @@
         <dependency>
             <groupId>com.mobeta.android.dslv</groupId>
             <artifactId>drag-sort-listview</artifactId>
-            <version>0.6.1-SNAPSHOT</version>
+            <version>${sortlistview.version}</version>
             <type>apklib</type>
         </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.2.4</version>
+            <version>${gson.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
