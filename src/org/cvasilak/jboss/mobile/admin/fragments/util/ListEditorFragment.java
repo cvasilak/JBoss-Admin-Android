@@ -19,17 +19,12 @@ package org.cvasilak.jboss.mobile.admin.fragments.util;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.text.InputType;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.mobeta.android.dslv.DragSortListView;
 import org.cvasilak.jboss.mobile.admin.R;
 import org.cvasilak.jboss.mobile.admin.fragments.dialogs.ErrorDialogFragment;
@@ -38,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ListEditorFragment extends SherlockListFragment {
+public class ListEditorFragment extends ListFragment {
 
     ArrayAdapter<RowModel> adapter;
 
@@ -128,7 +123,7 @@ public class ListEditorFragment extends SherlockListFragment {
         } else if (item.getItemId() == R.id.done) {
             RowAdapter adapter = (RowAdapter) getListAdapter();
 
-            View v = getSherlockActivity().getCurrentFocus();
+            View v = getActivity().getCurrentFocus();
 
             // handle the case where an editext has focus
             // and user clicks 'Save'.
@@ -140,7 +135,7 @@ public class ListEditorFragment extends SherlockListFragment {
                 model.value = ((EditText) v).getText().toString();
 
                 // hide the keyboard now
-                InputMethodManager inputMethodManager = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
 
@@ -150,7 +145,7 @@ public class ListEditorFragment extends SherlockListFragment {
                 if (adapter.getItem(i).value.equals("")) {
 
                     ErrorDialogFragment errorDialog = ErrorDialogFragment.newInstance(getString(R.string.unedited_field));
-                    errorDialog.show(getSherlockActivity().getSupportFragmentManager(), ErrorDialogFragment.TAG);
+                    errorDialog.show(getActivity().getSupportFragmentManager(), ErrorDialogFragment.TAG);
 
                     return false;
                 }
@@ -169,7 +164,7 @@ public class ListEditorFragment extends SherlockListFragment {
                 // close listeditor screen by simulating back button pressed.
                 // this will allow the root activity to remove the fragment
                 // from the back stack
-                getSherlockActivity().onBackPressed();
+                getActivity().onBackPressed();
             }
         }
 
@@ -189,7 +184,7 @@ public class ListEditorFragment extends SherlockListFragment {
         String placeHolder;
 
         RowAdapter(boolean isNumber, String placeHolder) {
-            super(getSherlockActivity(), R.layout.editor_listview_row, R.id.value);
+            super(getActivity(), R.layout.editor_listview_row, R.id.value);
 
             this.isNumber = isNumber;
             this.placeHolder = placeHolder;

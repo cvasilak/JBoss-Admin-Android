@@ -18,12 +18,13 @@
 package org.cvasilak.jboss.mobile.admin.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PropertiesViewFragment extends SherlockListFragment {
+public class PropertiesViewFragment extends ListFragment {
 
     private static final String TAG = PropertiesViewFragment.class.getSimpleName();
 
@@ -52,7 +53,7 @@ public class PropertiesViewFragment extends SherlockListFragment {
 
         setRetainInstance(true);
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         properties = new ArrayList<Metric>();
 
@@ -65,10 +66,10 @@ public class PropertiesViewFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         bar.setTitle(getString(R.string.properties));
 
-        setListAdapter(new MetricsAdapter(getSherlockActivity(), properties));
+        setListAdapter(new MetricsAdapter(getActivity(), properties));
     }
 
     @Override
@@ -90,12 +91,12 @@ public class PropertiesViewFragment extends SherlockListFragment {
     }
 
     public void refresh() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchPropertiesInformation(new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 properties.clear();
 
@@ -115,9 +116,9 @@ public class PropertiesViewFragment extends SherlockListFragment {
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }

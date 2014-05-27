@@ -22,19 +22,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonElement;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
 import org.cvasilak.jboss.mobile.admin.R;
@@ -48,7 +46,7 @@ import org.cvasilak.jboss.mobile.admin.net.Callback;
 
 import java.util.List;
 
-public class ServersViewFragment extends SherlockListFragment {
+public class ServersViewFragment extends ListFragment {
 
     private static final String TAG = ServersViewFragment.class.getSimpleName();
 
@@ -70,7 +68,7 @@ public class ServersViewFragment extends SherlockListFragment {
 
         Log.d(TAG, "@onCreate()");
 
-        application = ((JBossAdminApplication) getSherlockActivity().getApplication());
+        application = ((JBossAdminApplication) getActivity().getApplication());
         serversManager = application.getServersManager();
 
         setHasOptionsMenu(true);
@@ -99,17 +97,15 @@ public class ServersViewFragment extends SherlockListFragment {
                 getListView().setItemChecked(position, true);
 
                 // Start the CAB using the ActionMode.Callback defined above
-                mActionMode = getSherlockActivity().startActionMode(new ActionModeCallback());
+                mActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
 
                 return true;
             }
         });
 
-        getSherlockActivity().
-                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-        getSherlockActivity().
-                getSupportActionBar().setTitle("JBoss Admin");
+        ActionBar bar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+        bar.setDisplayHomeAsUpEnabled(false);
+        bar.setTitle("JBoss Admin");
     }
 
     @Override
@@ -142,7 +138,7 @@ public class ServersViewFragment extends SherlockListFragment {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             // Inflate a menu resource providing context menu items
-            getSherlockActivity().getSupportMenuInflater().inflate(R.menu.context_menu_servers_list,
+            getActivity().getMenuInflater().inflate(R.menu.context_menu_servers_list,
                     menu);
             return true;
         }
@@ -165,7 +161,7 @@ public class ServersViewFragment extends SherlockListFragment {
 
                 case R.id.servers_context_delete:
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                            getSherlockActivity());
+                            getActivity());
 
                     alertDialog
                             .setTitle(String.format(getString(R.string.dialog_confirm_action_title), getString(R.string.action_delete)))
@@ -187,7 +183,7 @@ public class ServersViewFragment extends SherlockListFragment {
                                                 Log.d(TAG, "exception on save", e);
 
                                                 ErrorDialogFragment.
-                                                        showDialog(getSherlockActivity(), getString(R.string.error_on_save));
+                                                        showDialog(getActivity(), getString(R.string.error_on_save));
                                             }
 
                                             adapter.notifyDataSetChanged();
@@ -196,7 +192,7 @@ public class ServersViewFragment extends SherlockListFragment {
                                     });
 
                     ParameterizedDialogFragment dialog = new ParameterizedDialogFragment(alertDialog);
-                    dialog.show(getSherlockActivity().getSupportFragmentManager(), null);
+                    dialog.show(getActivity().getSupportFragmentManager(), null);
 
                     mActionMode.finish();
 
@@ -217,14 +213,14 @@ public class ServersViewFragment extends SherlockListFragment {
     public void onListItemClick(ListView list, View view, int position, long id) {
         application.setCurrentActiveServer(serversManager.serverAtIndex(position));
 
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchJBossVersion(new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                Intent i = new Intent(getSherlockActivity(),
+                Intent i = new Intent(getActivity(),
                         JBossServerRootActivity.class);
 
                 startActivity(i);
@@ -232,15 +228,15 @@ public class ServersViewFragment extends SherlockListFragment {
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }
 
     private void showEditorForPosition(int pos) {
-        FragmentManager fragmentManager = getSherlockActivity().getSupportFragmentManager();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 .addToBackStack(null)
@@ -250,7 +246,7 @@ public class ServersViewFragment extends SherlockListFragment {
 
     class ServerAdapter extends ArrayAdapter<Server> {
         ServerAdapter(List<Server> servers) {
-            super(getSherlockActivity(), R.layout.twoline_list_item, R.id.text1, servers);
+            super(getActivity(), R.layout.twoline_list_item, R.id.text1, servers);
         }
 
         @Override

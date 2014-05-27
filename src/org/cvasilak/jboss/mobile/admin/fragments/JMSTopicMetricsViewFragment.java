@@ -17,14 +17,15 @@
 
 package org.cvasilak.jboss.mobile.admin.fragments;
 
+import android.support.v7.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
@@ -42,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JMSTopicMetricsViewFragment extends SherlockListFragment {
+public class JMSTopicMetricsViewFragment extends ListFragment {
 
     private static final String TAG = JMSTopicMetricsViewFragment.class.getSimpleName();
 
@@ -73,7 +74,7 @@ public class JMSTopicMetricsViewFragment extends SherlockListFragment {
 
         this.topicName = getArguments().getString("topicName");
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         inFlightMetrics = new ArrayList<Metric>();
 
@@ -101,7 +102,7 @@ public class JMSTopicMetricsViewFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         bar.setTitle(topicName);
 
         MergeAdapter adapter = new MergeAdapter();
@@ -109,33 +110,33 @@ public class JMSTopicMetricsViewFragment extends SherlockListFragment {
         TextView sectionHeader;
 
         // Section: In-Flight Messages
-        sectionHeader = new TextView(getSherlockActivity());
+        sectionHeader = new TextView(getActivity());
         sectionHeader.setBackgroundColor(Color.DKGRAY);
         sectionHeader.setPadding(15, 10, 0, 10);
         sectionHeader.setText("In-Flight Messages");
         adapter.addView(sectionHeader);
 
-        MetricsAdapter inFlightMetricsAdapter = new MetricsAdapter(getSherlockActivity(), inFlightMetrics);
+        MetricsAdapter inFlightMetricsAdapter = new MetricsAdapter(getActivity(), inFlightMetrics);
         adapter.addAdapter(inFlightMetricsAdapter);
 
         // Section: Messages Processed
-        sectionHeader = new TextView(getSherlockActivity());
+        sectionHeader = new TextView(getActivity());
         sectionHeader.setBackgroundColor(Color.DKGRAY);
         sectionHeader.setPadding(15, 10, 0, 10);
         sectionHeader.setText("Messages Processed");
         adapter.addView(sectionHeader);
 
-        MetricsAdapter msgProcessedMetricsAdapter = new MetricsAdapter(getSherlockActivity(), msgProcessedMetrics);
+        MetricsAdapter msgProcessedMetricsAdapter = new MetricsAdapter(getActivity(), msgProcessedMetrics);
         adapter.addAdapter(msgProcessedMetricsAdapter);
 
         // Section: Consumer
-        sectionHeader = new TextView(getSherlockActivity());
+        sectionHeader = new TextView(getActivity());
         sectionHeader.setBackgroundColor(Color.DKGRAY);
         sectionHeader.setPadding(15, 10, 0, 10);
         sectionHeader.setText("Subscriptions");
         adapter.addView(sectionHeader);
 
-        MetricsAdapter subscriptionerMetricsAdapter = new MetricsAdapter(getSherlockActivity(), subscriptionMetrics);
+        MetricsAdapter subscriptionerMetricsAdapter = new MetricsAdapter(getActivity(), subscriptionMetrics);
         adapter.addAdapter(subscriptionerMetricsAdapter);
 
         setListAdapter(adapter);
@@ -160,12 +161,12 @@ public class JMSTopicMetricsViewFragment extends SherlockListFragment {
     }
 
     public void refresh() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchJMSQueueMetrics(topicName, JMSType.TOPIC, new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 JsonObject jsonObj = reply.getAsJsonObject();
 
@@ -215,9 +216,9 @@ public class JMSTopicMetricsViewFragment extends SherlockListFragment {
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }

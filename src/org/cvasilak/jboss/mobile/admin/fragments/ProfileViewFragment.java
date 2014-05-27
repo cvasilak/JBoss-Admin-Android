@@ -20,18 +20,15 @@ package org.cvasilak.jboss.mobile.admin.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -50,7 +47,7 @@ import org.cvasilak.jboss.mobile.admin.util.listview.adapters.IconTextRowAdapter
 
 import java.util.*;
 
-public class ProfileViewFragment extends SherlockListFragment {
+public class ProfileViewFragment extends ListFragment {
 
     private static final String TAG = ProfileViewFragment.class.getSimpleName();
 
@@ -80,7 +77,7 @@ public class ProfileViewFragment extends SherlockListFragment {
 
         setRetainInstance(true);
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         if (getArguments() != null) {
             this.path = getArguments().getStringArrayList("path");
@@ -100,7 +97,7 @@ public class ProfileViewFragment extends SherlockListFragment {
         super.onActivityCreated(savedInstanceState);
 
         // adjust the title
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
 
         if (path == null)
             bar.setTitle(application.getOperationsManager().
@@ -113,7 +110,7 @@ public class ProfileViewFragment extends SherlockListFragment {
         TextView sectionHeader;
 
         // Section: Attributes
-        sectionHeader = new TextView(getSherlockActivity());
+        sectionHeader = new TextView(getActivity());
         sectionHeader.setBackgroundColor(Color.DKGRAY);
         sectionHeader.setPadding(15, 10, 0, 10);
         sectionHeader.setText(R.string.attributes);
@@ -122,7 +119,7 @@ public class ProfileViewFragment extends SherlockListFragment {
         adapter.addAdapter(new AttributeAdapter(attributes));
 
         // Section ChildTypes
-        sectionHeader = new TextView(getSherlockActivity());
+        sectionHeader = new TextView(getActivity());
         sectionHeader.setBackgroundColor(Color.DKGRAY);
         sectionHeader.setPadding(15, 10, 0, 10);
         sectionHeader.setText(R.string.child_types);
@@ -131,13 +128,13 @@ public class ProfileViewFragment extends SherlockListFragment {
         adapter.addAdapter(new ChildTypeAdapter(childTypes));
 
         // Section Operations
-        sectionHeader = new TextView(getSherlockActivity());
+        sectionHeader = new TextView(getActivity());
         sectionHeader.setBackgroundColor(Color.DKGRAY);
         sectionHeader.setHeight(20);
         sectionHeader.setPadding(15, 10, 0, 10);
         adapter.addView(sectionHeader);
 
-        adapter.addAdapter(new IconTextRowAdapter(getSherlockActivity(), Arrays.asList(getString(R.string.operations)), R.drawable.ic_operations));
+        adapter.addAdapter(new IconTextRowAdapter(getActivity(), Arrays.asList(getString(R.string.operations)), R.drawable.ic_operations));
 
         setListAdapter(adapter);
     }
@@ -174,7 +171,7 @@ public class ProfileViewFragment extends SherlockListFragment {
     }
 
     public void refresh() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         ParametersMap step1 = ParametersMap.newMap()
                 .add("operation", "read-resource")
@@ -191,7 +188,7 @@ public class ProfileViewFragment extends SherlockListFragment {
         application.getOperationsManager().genericRequest(params, true, new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 // clear existing data
                 attributes.clear();
@@ -253,9 +250,9 @@ public class ProfileViewFragment extends SherlockListFragment {
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }
@@ -268,7 +265,7 @@ public class ProfileViewFragment extends SherlockListFragment {
         // to avoid contacting the server again in case a user
         // clicks another attribute in the same resource.
         if (selectedAttr.getType() == null) {
-            ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+            ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
             ParametersMap params = ParametersMap.newMap()
                     .add("operation", "read-resource-description")
@@ -277,7 +274,7 @@ public class ProfileViewFragment extends SherlockListFragment {
             application.getOperationsManager().genericRequest(params, true, new Callback() {
                 @Override
                 public void onSuccess(JsonElement reply) {
-                    ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                    ProgressDialogFragment.dismissDialog(getActivity());
 
                     JsonObject jsonObj = reply.getAsJsonObject();
 
@@ -316,9 +313,9 @@ public class ProfileViewFragment extends SherlockListFragment {
 
                 @Override
                 public void onFailure(Exception e) {
-                    ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                    ProgressDialogFragment.dismissDialog(getActivity());
 
-                    ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                    ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
                 }
             }
             );
@@ -336,12 +333,12 @@ public class ProfileViewFragment extends SherlockListFragment {
     }
 
     private void showFragment(Fragment fragment) {
-        ((JBossServerRootActivity) getSherlockActivity()).addFragment(fragment);
+        ((JBossServerRootActivity) getActivity()).addFragment(fragment);
     }
 
     class AttributeAdapter extends ArrayAdapter<Attribute> {
         AttributeAdapter(List<Attribute> attributes) {
-            super(getSherlockActivity(), R.layout.twoline_list_item, R.id.text1, attributes);
+            super(getActivity(), R.layout.twoline_list_item, R.id.text1, attributes);
         }
 
         @Override
@@ -393,7 +390,7 @@ public class ProfileViewFragment extends SherlockListFragment {
 
     class ChildTypeAdapter extends ArrayAdapter<ChildType> {
         ChildTypeAdapter(List<ChildType> childTypes) {
-            super(getSherlockActivity(), R.layout.icon_text_row, R.id.row_name, childTypes);
+            super(getActivity(), R.layout.icon_text_row, R.id.row_name, childTypes);
         }
 
         @Override

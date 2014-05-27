@@ -18,13 +18,13 @@
 package org.cvasilak.jboss.mobile.admin.activities;
 
 import android.os.Bundle;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import org.cvasilak.jboss.mobile.admin.fragments.ServersViewFragment;
 
 /*
  * start the ball rolling...
  */
-public class JBossAdminActivity extends SherlockFragmentActivity {
+public class JBossAdminActivity extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

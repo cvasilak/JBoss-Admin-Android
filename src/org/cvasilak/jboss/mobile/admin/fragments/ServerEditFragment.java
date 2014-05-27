@@ -19,25 +19,24 @@ package org.cvasilak.jboss.mobile.admin.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
 import org.cvasilak.jboss.mobile.admin.R;
 import org.cvasilak.jboss.mobile.admin.fragments.dialogs.ErrorDialogFragment;
 import org.cvasilak.jboss.mobile.admin.model.Server;
 import org.cvasilak.jboss.mobile.admin.model.ServersManager;
 
-public class ServerEditFragment extends SherlockFragment {
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+public class ServerEditFragment extends Fragment {
 
     private static final String TAG = ServerEditFragment.class.getSimpleName();
 
@@ -71,7 +70,7 @@ public class ServerEditFragment extends SherlockFragment {
 
         Log.d(TAG, "@onCreate()");
 
-        serversManager = ((JBossAdminApplication) getSherlockActivity().getApplication()).getServersManager();
+        serversManager = ((JBossAdminApplication) getActivity().getApplication()).getServersManager();
 
         setHasOptionsMenu(true);
     }
@@ -100,7 +99,7 @@ public class ServerEditFragment extends SherlockFragment {
             password.setText(server.getPassword());
         }
 
-        ActionBar actionBar = getSherlockActivity().getSupportActionBar();
+        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
 
         actionBar.setTitle(serverIndex != -1 ? server.getName() : getString(R.string.new_server));
         actionBar.setDisplayShowTitleEnabled(true);
@@ -124,14 +123,14 @@ public class ServerEditFragment extends SherlockFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            getSherlockActivity().onBackPressed();
+            getActivity().onBackPressed();
         } else {
             if (item.getItemId() == R.id.save) {
                 if (name.getText().toString().equals("")
                         || hostname.getText().toString().equals("")
                         || port.getText().toString().equals("")) {
 
-                    ErrorDialogFragment.showDialog(getSherlockActivity(), getString(R.string.not_enough_params));
+                    ErrorDialogFragment.showDialog(getActivity(), getString(R.string.not_enough_params));
 
                     return false;
                 }
@@ -147,24 +146,31 @@ public class ServerEditFragment extends SherlockFragment {
                 server.setPort(Integer.parseInt(port.getText().toString()));
                 server.setSSLSecured(isSSLSecured.isChecked());
                 server.setUsername(username.getText().toString());
-                server.setPassword(password.getText().toString());
+
+                // try to urlencode password
+                try {
+                    String encodedPassword = URLEncoder.encode(password.getText().toString(), "UTF-8");
+                    server.setPassword(encodedPassword);
+                } catch (UnsupportedEncodingException e) {
+                    ErrorDialogFragment.showDialog(getActivity(), getString(R.string.error_on_password_save));
+                }
 
                 try {
                     serversManager.save();
 
-                    View v = getSherlockActivity().getCurrentFocus();
+                    View v = getActivity().getCurrentFocus();
 
                     // hide the soft keyboard if open
                     if (v != null && (v instanceof EditText)) {
                         // hide the keyboard now
-                        InputMethodManager inputMethodManager = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     }
 
-                    getSherlockActivity().getSupportFragmentManager().popBackStack();
+                    getActivity().getSupportFragmentManager().popBackStack();
 
                 } catch (Exception e) { // error occurred during save
-                    ErrorDialogFragment.showDialog(getSherlockActivity(), getString(R.string.error_on_save));
+                    ErrorDialogFragment.showDialog(getActivity(), getString(R.string.error_on_save));
                 }
             }
         }

@@ -21,16 +21,17 @@ import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonElement;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
 import org.cvasilak.jboss.mobile.admin.R;
@@ -44,7 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChildResourcesViewFragment extends SherlockListFragment {
+public class ChildResourcesViewFragment extends ListFragment {
 
     private static final String TAG = ChildResourcesViewFragment.class.getSimpleName();
 
@@ -75,7 +76,7 @@ public class ChildResourcesViewFragment extends SherlockListFragment {
 
         setRetainInstance(true);
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         childResources = new ArrayList<String>();
 
@@ -94,7 +95,7 @@ public class ChildResourcesViewFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         bar.setTitle(childTypeName);
     }
 
@@ -142,7 +143,7 @@ public class ChildResourcesViewFragment extends SherlockListFragment {
             fragment = ProfileViewFragment.newInstance(next);
         }
 
-        ((JBossServerRootActivity) getSherlockActivity()).addFragment(fragment);
+        ((JBossServerRootActivity) getActivity()).addFragment(fragment);
     }
 
     public void refresh() {
@@ -209,7 +210,7 @@ public class ChildResourcesViewFragment extends SherlockListFragment {
             @Override
             public void onFailure(Exception e) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                        getSherlockActivity());
+                        getActivity());
 
                 alertDialog
                         .setTitle(R.string.dialog_error_title)
@@ -229,27 +230,27 @@ public class ChildResourcesViewFragment extends SherlockListFragment {
 
         if (childResources.size() != 0) {
             // Section: Child Resources
-            sectionHeader = new TextView(getSherlockActivity());
+            sectionHeader = new TextView(getActivity());
             sectionHeader.setBackgroundColor(Color.DKGRAY);
             sectionHeader.setPadding(15, 10, 0, 10);
             sectionHeader.setText(R.string.child_resources);
             adapter.addView(sectionHeader);
 
             adapter.addAdapter(new ArrayAdapter<String>(
-                    getSherlockActivity(),
+                    getActivity(),
                     android.R.layout.simple_list_item_2, android.R.id.text1, childResources));
         }
 
         if (hasGenericOps) {
             if (childResources.size() != 0) { // if the are previous items, add the splitter
-                sectionHeader = new TextView(getSherlockActivity());
+                sectionHeader = new TextView(getActivity());
                 sectionHeader.setBackgroundColor(Color.DKGRAY);
                 sectionHeader.setHeight(20);
                 sectionHeader.setPadding(15, 10, 0, 10);
                 adapter.addView(sectionHeader);
             }
 
-            adapter.addAdapter(new IconTextRowAdapter(getSherlockActivity(), Arrays.asList(getString(R.string.generic_operations)), R.drawable.ic_operations));
+            adapter.addAdapter(new IconTextRowAdapter(getActivity(), Arrays.asList(getString(R.string.generic_operations)), R.drawable.ic_operations));
         }
 
         setListAdapter(adapter);

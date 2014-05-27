@@ -17,15 +17,16 @@
 
 package org.cvasilak.jboss.mobile.admin.fragments;
 
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
@@ -39,7 +40,7 @@ import org.cvasilak.jboss.mobile.admin.net.JBossOperationsManager.JMSType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JMSTopicsViewFragment extends SherlockListFragment {
+public class JMSTopicsViewFragment extends ListFragment {
 
     private static final String TAG = JMSTopicsViewFragment.class.getSimpleName();
 
@@ -53,7 +54,7 @@ public class JMSTopicsViewFragment extends SherlockListFragment {
 
         setRetainInstance(true);
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         topics = new ArrayList<String>();
 
@@ -66,11 +67,11 @@ public class JMSTopicsViewFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         bar.setTitle(getString(R.string.jms_topics));
 
         setListAdapter(new ArrayAdapter<String>(
-                getSherlockActivity(),
+                getActivity(),
                 android.R.layout.simple_list_item_1, topics));
     }
 
@@ -98,16 +99,16 @@ public class JMSTopicsViewFragment extends SherlockListFragment {
 
         JMSTopicMetricsViewFragment fragment = JMSTopicMetricsViewFragment.newInstance(topicName);
 
-        ((JBossServerRootActivity) getSherlockActivity()).addFragment(fragment);
+        ((JBossServerRootActivity) getActivity()).addFragment(fragment);
     }
 
     public void refresh() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchJMSMessagingModelList(JMSType.TOPIC, new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 topics.clear();
 
@@ -122,9 +123,9 @@ public class JMSTopicsViewFragment extends SherlockListFragment {
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }

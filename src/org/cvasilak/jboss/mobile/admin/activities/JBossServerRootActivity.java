@@ -20,10 +20,10 @@ package org.cvasilak.jboss.mobile.admin.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
+import android.view.MenuItem;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
 import org.cvasilak.jboss.mobile.admin.R;
 import org.cvasilak.jboss.mobile.admin.fragments.ProfileViewFragment;
@@ -38,7 +38,7 @@ import java.util.UUID;
  * Extracted from Andrey Novikov post found in https://gist.github.com/andreynovikov/4619215
  * and modified a bit to suit our needs.
  */
-public class JBossServerRootActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
+public class JBossServerRootActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     private static final String TAG = JBossServerRootActivity.class.getSimpleName();
 

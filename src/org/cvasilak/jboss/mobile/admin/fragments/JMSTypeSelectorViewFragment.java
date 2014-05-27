@@ -17,19 +17,20 @@
 
 package org.cvasilak.jboss.mobile.admin.fragments;
 
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import org.cvasilak.jboss.mobile.admin.R;
 import org.cvasilak.jboss.mobile.admin.activities.JBossServerRootActivity;
 
-public class JMSTypeSelectorViewFragment extends SherlockListFragment {
+public class JMSTypeSelectorViewFragment extends ListFragment {
 
     private static final String TAG = JMSTypeSelectorViewFragment.class.getSimpleName();
 
@@ -43,11 +44,11 @@ public class JMSTypeSelectorViewFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         bar.setTitle(getString(R.string.jms_destinations));
 
         setListAdapter(new ArrayAdapter<String>(
-                getSherlockActivity(),
+                getActivity(),
                 android.R.layout.simple_list_item_1, new String[]{"Queues", "Topics"}));
     }
 
@@ -70,6 +71,6 @@ public class JMSTypeSelectorViewFragment extends SherlockListFragment {
             fragment = new JMSTopicsViewFragment();
         }
 
-        ((JBossServerRootActivity) getSherlockActivity()).addFragment(fragment);
+        ((JBossServerRootActivity) getActivity()).addFragment(fragment);
     }
 }

@@ -19,6 +19,7 @@ package org.cvasilak.jboss.mobile.admin.fragments;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.google.gson.JsonElement;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
 import org.cvasilak.jboss.mobile.admin.R;
@@ -40,7 +40,7 @@ import org.cvasilak.jboss.mobile.admin.util.ParametersMap;
 
 import java.util.*;
 
-public class DeploymentDetailsDialogFragment extends SherlockDialogFragment {
+public class DeploymentDetailsDialogFragment extends DialogFragment {
 
     private static final String TAG = DeploymentDetailsDialogFragment.class.getSimpleName();
 
@@ -76,7 +76,7 @@ public class DeploymentDetailsDialogFragment extends SherlockDialogFragment {
 
         Log.d(TAG, "@onCreate()");
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         // extract params
         server = getArguments().getParcelable("server");
@@ -118,7 +118,7 @@ public class DeploymentDetailsDialogFragment extends SherlockDialogFragment {
             if (name.getText().toString().equals("")
                     || runtimeName.getText().toString().equals("")) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                        getSherlockActivity());
+                        getActivity());
 
                 alertDialog
                         .setTitle(R.string.dialog_error_title)
@@ -144,23 +144,23 @@ public class DeploymentDetailsDialogFragment extends SherlockDialogFragment {
                     .add("runtime-name", runtimeName.getText().toString())
                     .add("content", wrapToList(HASH));
 
-            ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.enablingDeployment);
+            ProgressDialogFragment.showDialog(getActivity(), R.string.enablingDeployment);
 
-            TalkToJBossServerTask task = new TalkToJBossServerTask(getSherlockActivity(), server, new Callback() {
+            TalkToJBossServerTask task = new TalkToJBossServerTask(getActivity(), server, new Callback() {
                 @Override
                 public void onSuccess(JsonElement reply) {
-                    ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                    ProgressDialogFragment.dismissDialog(getActivity());
 
-                    Toast.makeText(getSherlockActivity(), getString(R.string.deployment_added), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.deployment_added), Toast.LENGTH_SHORT).show();
 
-                    getSherlockActivity().finish();
+                    getActivity().finish();
                 }
 
                 @Override
                 public void onFailure(Exception e) {
-                    ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                    ProgressDialogFragment.dismissDialog(getActivity());
 
-                    ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                    ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
                 }
             });
 

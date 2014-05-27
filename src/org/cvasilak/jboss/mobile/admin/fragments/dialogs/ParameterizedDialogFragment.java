@@ -21,9 +21,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import android.support.v4.app.DialogFragment;
 
-public class ParameterizedDialogFragment extends SherlockDialogFragment {
+public class ParameterizedDialogFragment extends DialogFragment {
 
     private AlertDialog.Builder builder;
     private DialogInterface.OnShowListener showListener;

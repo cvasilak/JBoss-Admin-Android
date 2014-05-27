@@ -18,17 +18,14 @@
 package org.cvasilak.jboss.mobile.admin.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
@@ -42,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class DomainServerGroupsViewFragment extends SherlockListFragment {
+public class DomainServerGroupsViewFragment extends ListFragment {
 
     private static final String TAG = JMSQueuesViewFragment.class.getSimpleName();
 
@@ -58,7 +55,7 @@ public class DomainServerGroupsViewFragment extends SherlockListFragment {
 
         Log.d(TAG, "@onCreate()");
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         groups = new ArrayList<Group>();
 
@@ -71,7 +68,7 @@ public class DomainServerGroupsViewFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         bar.setTitle(getString(R.string.server_groups));
 
         setListAdapter(new GroupAdapter(groups));
@@ -101,16 +98,16 @@ public class DomainServerGroupsViewFragment extends SherlockListFragment {
 
         DeploymentsViewFragment fragment = DeploymentsViewFragment.newInstance(group.name, DeploymentsViewFragment.Mode.SERVER_MODE);
 
-        ((JBossServerRootActivity) getSherlockActivity()).addFragment(fragment);
+        ((JBossServerRootActivity) getActivity()).addFragment(fragment);
     }
 
     public void refresh() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchDomainGroups(new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 groups.clear();
 
@@ -137,16 +134,16 @@ public class DomainServerGroupsViewFragment extends SherlockListFragment {
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }
 
     class GroupAdapter extends ArrayAdapter<Group> {
         GroupAdapter(List<Group> groups) {
-            super(getSherlockActivity(), R.layout.twoline_list_item, R.id.text1, groups);
+            super(getActivity(), R.layout.twoline_list_item, R.id.text1, groups);
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {

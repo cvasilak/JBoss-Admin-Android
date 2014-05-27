@@ -70,6 +70,7 @@
     <string name="execute">Execute</string>
     <string name="not_enough_params">Please complete at least Hostname and Port fields!</string>
     <string name="error_on_save">An error occurred during save!</string>
+    <string name="error_on_password_save">Password contains invalid characters!</string>
     <string name="new_server">New Server</string>
     <string name="default_port">9990</string>
 

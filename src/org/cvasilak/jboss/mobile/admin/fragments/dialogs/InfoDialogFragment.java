@@ -20,12 +20,12 @@ package org.cvasilak.jboss.mobile.admin.fragments.dialogs;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import org.cvasilak.jboss.mobile.admin.R;
 
-public class InfoDialogFragment extends SherlockDialogFragment {
+public class InfoDialogFragment extends DialogFragment {
 
     public static final String TAG = InfoDialogFragment.class.getSimpleName();
 
@@ -45,7 +45,7 @@ public class InfoDialogFragment extends SherlockDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(
-                getSherlockActivity());
+                getActivity());
 
         builder
                 .setTitle(getArguments().getString("title"))
@@ -57,7 +57,7 @@ public class InfoDialogFragment extends SherlockDialogFragment {
         return builder.create();
     }
 
-    public static void showDialog(SherlockFragmentActivity activity, String title, String message) {
+    public static void showDialog(FragmentActivity activity, String title, String message) {
         FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
 
         InfoDialogFragment dialog = InfoDialogFragment.newInstance(title, message);

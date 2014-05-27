@@ -17,18 +17,15 @@
 
 package org.cvasilak.jboss.mobile.admin.fragments;
 
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
+import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,7 +40,7 @@ import org.cvasilak.jboss.mobile.admin.net.JBossOperationsManager.DataSourceType
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataSourcesViewFragment extends SherlockListFragment {
+public class DataSourcesViewFragment extends ListFragment {
 
     private static final String TAG = DataSourcesViewFragment.class.getSimpleName();
 
@@ -57,7 +54,7 @@ public class DataSourcesViewFragment extends SherlockListFragment {
 
         setRetainInstance(true);
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         datasources = new ArrayList<DataSource>();
 
@@ -70,7 +67,7 @@ public class DataSourcesViewFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         bar.setTitle(getString(R.string.data_sources));
 
         setListAdapter(new DataSourceAdapter(datasources));
@@ -99,17 +96,17 @@ public class DataSourcesViewFragment extends SherlockListFragment {
         DataSource selectedDS = datasources.get(position);
         DataSourceMetricsViewFragment fragment = DataSourceMetricsViewFragment.newInstance(selectedDS.name, selectedDS.type);
 
-        ((JBossServerRootActivity) getSherlockActivity()).addFragment(fragment);
+        ((JBossServerRootActivity) getActivity()).addFragment(fragment);
     }
 
     public void refresh() {
-        //progress = ProgressDialog.show(getSherlockActivity(), "", getString(R.string.queryingServer));
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        //progress = ProgressDialog.show(getActivity(), "", getString(R.string.queryingServer));
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchDataSourceList(new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 datasources.clear();
 
@@ -130,16 +127,16 @@ public class DataSourcesViewFragment extends SherlockListFragment {
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }
 
     class DataSourceAdapter extends ArrayAdapter<DataSource> {
         DataSourceAdapter(List<DataSource> list) {
-            super(getSherlockActivity(), R.layout.icon_text_row, R.id.row_name, list);
+            super(getActivity(), R.layout.icon_text_row, R.id.row_name, list);
         }
 
         @Override

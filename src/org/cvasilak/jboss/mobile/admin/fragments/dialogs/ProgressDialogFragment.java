@@ -21,12 +21,12 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class ProgressDialogFragment extends SherlockDialogFragment {
+public class ProgressDialogFragment extends DialogFragment {
 
     public static final String TAG = ProgressDialogFragment.class.getSimpleName();
 
@@ -44,8 +44,8 @@ public class ProgressDialogFragment extends SherlockDialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        ProgressDialog dialog = new ProgressDialog(getSherlockActivity());
-        dialog.setMessage(getSherlockActivity().getString(getArguments().getInt("message")));
+        ProgressDialog dialog = new ProgressDialog(getActivity());
+        dialog.setMessage(getActivity().getString(getArguments().getInt("message")));
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
 
@@ -62,14 +62,14 @@ public class ProgressDialogFragment extends SherlockDialogFragment {
         return dialog;
     }
 
-    public static void showDialog(SherlockFragmentActivity activity, int msgId) {
+    public static void showDialog(FragmentActivity activity, int msgId) {
         FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
 
         ProgressDialogFragment dialog = ProgressDialogFragment.newInstance(msgId);
         dialog.show(ft, TAG);
     }
 
-    public static void dismissDialog(SherlockFragmentActivity activity) {
+    public static void dismissDialog(FragmentActivity activity) {
         ProgressDialogFragment dialog =
                 (ProgressDialogFragment) activity.getSupportFragmentManager().findFragmentByTag(TAG);
 

@@ -20,15 +20,16 @@ package org.cvasilak.jboss.mobile.admin.fragments;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonElement;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
 import org.cvasilak.jboss.mobile.admin.R;
@@ -48,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class OperationExecViewFragment extends SherlockListFragment implements ValueChangedListener {
+public class OperationExecViewFragment extends ListFragment implements ValueChangedListener {
 
     private static final String TAG = OperationExecViewFragment.class.getSimpleName();
 
@@ -85,7 +86,7 @@ public class OperationExecViewFragment extends SherlockListFragment implements V
 
         setRetainInstance(true);
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         this.oper = getArguments().getParcelable(PARCELABLE_KEY);
 
@@ -97,22 +98,22 @@ public class OperationExecViewFragment extends SherlockListFragment implements V
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         bar.setTitle(oper.getName());
 
         MergeAdapter adapter = new MergeAdapter();
 
         // Section: Attributes
-        adapter.addAdapter(new ManagementModelRowAdapter(getSherlockActivity(), oper.getParameters(), this));
+        adapter.addAdapter(new ManagementModelRowAdapter(getActivity(), oper.getParameters(), this));
 
         // Section: Description
-        TextView descrHeader = new TextView(getSherlockActivity());
+        TextView descrHeader = new TextView(getActivity());
         descrHeader.setBackgroundColor(Color.DKGRAY);
         descrHeader.setPadding(15, 10, 0, 10);
         descrHeader.setText(R.string.description);
         adapter.addView(descrHeader);
 
-        TextView description = new TextView(getSherlockActivity());
+        TextView description = new TextView(getActivity());
         description.setText(oper.getDescr());
 
         adapter.addView(description);
@@ -131,7 +132,7 @@ public class OperationExecViewFragment extends SherlockListFragment implements V
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save) {
 
-            View v = getSherlockActivity().getCurrentFocus();
+            View v = getActivity().getCurrentFocus();
 
             // handle the case where an editext has focus
             // and user clicks 'Save'.
@@ -142,7 +143,7 @@ public class OperationExecViewFragment extends SherlockListFragment implements V
                 onValueChanged(text.getTag().toString(), text.getText().toString());
 
                 // hide the keyboard now
-                InputMethodManager inputMethodManager = (InputMethodManager) getSherlockActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
 
@@ -155,7 +156,7 @@ public class OperationExecViewFragment extends SherlockListFragment implements V
     }
 
     public void save() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.applyingAction);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.applyingAction);
 
         ParametersMap params = ParametersMap.newMap()
                 .add("operation", oper.getName());
@@ -197,18 +198,18 @@ public class OperationExecViewFragment extends SherlockListFragment implements V
         application.getOperationsManager().genericRequest(params, false, new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 InfoDialogFragment infoDialog = InfoDialogFragment.
                         newInstance(getString(R.string.dialog_server_reply_title), reply.toString());
-                infoDialog.show(getSherlockActivity().getSupportFragmentManager(), InfoDialogFragment.TAG);
+                infoDialog.show(getActivity().getSupportFragmentManager(), InfoDialogFragment.TAG);
             }
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }

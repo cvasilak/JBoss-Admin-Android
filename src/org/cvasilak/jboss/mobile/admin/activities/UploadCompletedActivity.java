@@ -20,12 +20,12 @@ package org.cvasilak.jboss.mobile.admin.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import org.cvasilak.jboss.mobile.admin.R;
 import org.cvasilak.jboss.mobile.admin.fragments.DeploymentDetailsDialogFragment;
 import org.cvasilak.jboss.mobile.admin.model.Server;
 
-public class UploadCompletedActivity extends SherlockFragmentActivity {
+public class UploadCompletedActivity extends ActionBarActivity {
 
     private static final String TAG = UploadCompletedActivity.class.getSimpleName();
 

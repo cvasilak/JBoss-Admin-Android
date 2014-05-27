@@ -20,6 +20,9 @@ package org.cvasilak.jboss.mobile.admin.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +30,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
@@ -44,7 +45,7 @@ import org.cvasilak.jboss.mobile.admin.util.ParametersMap;
 
 import java.util.*;
 
-public class OperationsViewFragment extends SherlockListFragment {
+public class OperationsViewFragment extends ListFragment {
 
     private static final String TAG = OperationsViewFragment.class.getSimpleName();
 
@@ -76,13 +77,13 @@ public class OperationsViewFragment extends SherlockListFragment {
 
         setRetainInstance(true);
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         if (getArguments() != null) {
             this.path = getArguments().getStringArrayList("path");
         }
 
-        adapter = new OperationAdapter(getSherlockActivity());
+        adapter = new OperationAdapter(getActivity());
 
         setListAdapter(adapter);
 
@@ -94,7 +95,7 @@ public class OperationsViewFragment extends SherlockListFragment {
         super.onActivityCreated(savedInstanceState);
 
         // adjust the title
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
 
         boolean filterGeneric = (path != null && path.get(path.size() - 1).equals("*"));
 
@@ -111,7 +112,7 @@ public class OperationsViewFragment extends SherlockListFragment {
         if (operation.getDescr() == null) {
             // first time clicked, need to retrieve operation info
 
-            ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+            ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
             ParametersMap params = ParametersMap.newMap()
                     .add("operation", "read-operation-description")
@@ -121,7 +122,7 @@ public class OperationsViewFragment extends SherlockListFragment {
             application.getOperationsManager().genericRequest(params, true, new Callback() {
                 @Override
                 public void onSuccess(JsonElement reply) {
-                    ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                    ProgressDialogFragment.dismissDialog(getActivity());
 
                     JsonObject jsonObj = reply.getAsJsonObject();
 
@@ -224,9 +225,9 @@ public class OperationsViewFragment extends SherlockListFragment {
 
                 @Override
                 public void onFailure(Exception e) {
-                    ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                    ProgressDialogFragment.dismissDialog(getActivity());
 
-                    ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                    ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
                 }
             }
             );
@@ -236,7 +237,7 @@ public class OperationsViewFragment extends SherlockListFragment {
     }
 
     public void refresh() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         ParametersMap childParams = ParametersMap.newMap()
                 .add("operation", "read-operation-names")
@@ -245,7 +246,7 @@ public class OperationsViewFragment extends SherlockListFragment {
         application.getOperationsManager().genericRequest(childParams, true, new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 // Check if user requested to see generic operations.
                 // If so raise a flag so the list of operation names received from
@@ -272,16 +273,16 @@ public class OperationsViewFragment extends SherlockListFragment {
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         }
         );
     }
 
     private void showFragment(Fragment fragment) {
-        ((JBossServerRootActivity) getSherlockActivity()).addFragment(fragment);
+        ((JBossServerRootActivity) getActivity()).addFragment(fragment);
     }
 
     class OperationAdapter extends ArrayAdapter<Operation> {

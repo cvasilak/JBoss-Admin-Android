@@ -17,20 +17,16 @@
 
 package org.cvasilak.jboss.mobile.admin.fragments;
 
+import android.support.v7.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
@@ -49,7 +45,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class DeploymentsViewFragment extends SherlockListFragment {
+public class DeploymentsViewFragment extends ListFragment {
 
     private static final String TAG = DeploymentsViewFragment.class.getSimpleName();
 
@@ -99,7 +95,7 @@ public class DeploymentsViewFragment extends SherlockListFragment {
             this.mode = Mode.valueOf(getArguments().getString("mode"));
         }
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         deployments = new ArrayList<Deployment>();
 
@@ -112,7 +108,7 @@ public class DeploymentsViewFragment extends SherlockListFragment {
 
         Log.d(TAG, "@onActivityCreated()");
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
 
         bar.setTitle((mode == Mode.DOMAIN_MODE ?
                 getString(R.string.repository) :
@@ -134,7 +130,7 @@ public class DeploymentsViewFragment extends SherlockListFragment {
                 getListView().setItemChecked(position, true);
 
                 // Start the CAB using the ActionMode.Callback defined above
-                mActionMode = getSherlockActivity().startActionMode(new ActionModeCallback());
+                mActionMode = getActivity().startActionMode(new ActionModeCallback());
 
                 return true;
             }
@@ -177,7 +173,7 @@ public class DeploymentsViewFragment extends SherlockListFragment {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             // Inflate a menu resource providing context menu items
-            getSherlockActivity().getSupportMenuInflater().inflate(R.menu.context_menu_deployments_list,
+            getActivity().getMenuInflater().inflate(R.menu.context_menu_deployments_list,
                     menu);
             return true;
         }
@@ -238,7 +234,7 @@ public class DeploymentsViewFragment extends SherlockListFragment {
             // for the app to pick them up
             InfoDialogFragment infoDialog = InfoDialogFragment.
                     newInstance(getString(R.string.directory_empty_title), String.format(getString(R.string.directory_empty_msg), root.getAbsolutePath()));
-            infoDialog.show(getSherlockActivity().getSupportFragmentManager(), InfoDialogFragment.TAG);
+            infoDialog.show(getActivity().getSupportFragmentManager(), InfoDialogFragment.TAG);
 
             return;
         }
@@ -250,7 +246,7 @@ public class DeploymentsViewFragment extends SherlockListFragment {
 
         // time to display the list of files
         AlertDialog.Builder filesDialog = new AlertDialog.Builder(
-                getSherlockActivity());
+                getActivity());
 
         filesDialog.setTitle(R.string.upload_deployment_step1);
 
@@ -284,16 +280,16 @@ public class DeploymentsViewFragment extends SherlockListFragment {
             }
         });
 
-        dialog.show(getSherlockActivity().getSupportFragmentManager(), null);
+        dialog.show(getActivity().getSupportFragmentManager(), null);
     }
 
     public void showRepositoryDeploymentsOptionsMenu() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchDeployments(null, new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 String name, runtimeName, BYTES_VALUE;
                 boolean enabled = false;
@@ -301,7 +297,7 @@ public class DeploymentsViewFragment extends SherlockListFragment {
                 JsonObject jsonObj = reply.getAsJsonObject();
 
                 final ArrayAdapter<Deployment> repoAdapter = new ArrayAdapter<Deployment>(
-                        getSherlockActivity(),
+                        getActivity(),
                         android.R.layout.select_dialog_singlechoice);
 
                 for (Map.Entry<String, JsonElement> e : jsonObj.entrySet()) {
@@ -326,7 +322,7 @@ public class DeploymentsViewFragment extends SherlockListFragment {
 
                 // time to display content repository
                 AlertDialog.Builder filesDialog = new AlertDialog.Builder(
-                        getSherlockActivity());
+                        getActivity());
 
                 filesDialog.setTitle(R.string.add_deployment_from_repository);
                 filesDialog.setSingleChoiceItems(repoAdapter, selectedAlertDialogItemPos, new DialogInterface.OnClickListener() {
@@ -370,25 +366,25 @@ public class DeploymentsViewFragment extends SherlockListFragment {
                     }
                 });
 
-                dialog.show(getSherlockActivity().getSupportFragmentManager(), null);
+                dialog.show(getActivity().getSupportFragmentManager(), null);
             }
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }
 
     public void addDeploymentToGroup(final Deployment deployment) {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchDomainGroups(new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 JsonObject jsonObj = reply.getAsJsonObject();
 
@@ -399,7 +395,7 @@ public class DeploymentsViewFragment extends SherlockListFragment {
 
                 // time to display the list
                 AlertDialog.Builder groupsDialog = new AlertDialog.Builder(
-                        getSherlockActivity());
+                        getActivity());
 
                 groupsDialog.setTitle(R.string.add_deployment_to_group);
                 groupsDialog.setMultiChoiceItems(groups.toArray(new String[groups.size()]), new boolean[groups.size()], new DialogInterface.OnMultiChoiceClickListener() {
@@ -446,21 +442,21 @@ public class DeploymentsViewFragment extends SherlockListFragment {
                     }
                 });
 
-                dialog.show(getSherlockActivity().getSupportFragmentManager(), null);
+                dialog.show(getActivity().getSupportFragmentManager(), null);
             }
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }
 
     public void uploadDeployment(final String filename) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                getSherlockActivity());
+                getActivity());
 
         alertDialog
                 .setTitle(String.format(getString(R.string.dialog_confirm_action_title), getString(R.string.action_upload)))
@@ -473,7 +469,7 @@ public class DeploymentsViewFragment extends SherlockListFragment {
                             public void onClick(DialogInterface dialog,
                                                 int which) {
 
-                                Intent i = new Intent(getSherlockActivity(), UploadToJBossServerService.class);
+                                Intent i = new Intent(getActivity(), UploadToJBossServerService.class);
 
                                 // put the details for the service to pickup
                                 i.putExtra("server", application.getOperationsManager().getServer());
@@ -481,19 +477,19 @@ public class DeploymentsViewFragment extends SherlockListFragment {
                                 i.putExtra("filename", filename);
 
                                 // start service to upload file
-                                getSherlockActivity().startService(i);
+                                getActivity().startService(i);
 
-                                Toast.makeText(getSherlockActivity(), getString(R.string.deployment_schedule_to_upload), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), getString(R.string.deployment_schedule_to_upload), Toast.LENGTH_SHORT).show();
                             }
                         });
 
         ParameterizedDialogFragment dialog = new ParameterizedDialogFragment(alertDialog);
-        dialog.show(getSherlockActivity().getSupportFragmentManager(), null);
+        dialog.show(getActivity().getSupportFragmentManager(), null);
     }
 
     public void addDeployment(final Deployment deployment, final boolean enable, final List<String> groups) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                getSherlockActivity());
+                getActivity());
 
         alertDialog
                 .setTitle(String.format(getString(R.string.dialog_confirm_action_title), ""))
@@ -506,14 +502,14 @@ public class DeploymentsViewFragment extends SherlockListFragment {
                             public void onClick(DialogInterface dialog,
                                                 int which) {
 
-                                ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.applyingAction);
+                                ProgressDialogFragment.showDialog(getActivity(), R.string.applyingAction);
 
                                 application.getOperationsManager().addDeploymentContent(deployment.getBYTES_VALUE(), deployment.getName(), groups, enable, new Callback() {
                                     @Override
                                     public void onSuccess(JsonElement reply) {
-                                        ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                                        ProgressDialogFragment.dismissDialog(getActivity());
 
-                                        Toast.makeText(getSherlockActivity(), getString(R.string.deployment_added), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), getString(R.string.deployment_added), Toast.LENGTH_SHORT).show();
 
                                         // reflect enable in our model
                                         deployment.setEnabled(enable);
@@ -527,23 +523,23 @@ public class DeploymentsViewFragment extends SherlockListFragment {
 
                                     @Override
                                     public void onFailure(Exception e) {
-                                        ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                                        ProgressDialogFragment.dismissDialog(getActivity());
 
-                                        ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                                        ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
                                     }
                                 });
                             }
                         });
 
         ParameterizedDialogFragment dialog = new ParameterizedDialogFragment(alertDialog);
-        dialog.show(getSherlockActivity().getSupportFragmentManager(), null);
+        dialog.show(getActivity().getSupportFragmentManager(), null);
     }
 
     public void toggleDeploymentStatus(final Deployment deployment) {
         String action = deployment.isEnabled() ? getString(R.string.action_disable) : getString(R.string.action_enable);
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                getSherlockActivity());
+                getActivity());
 
         alertDialog
                 .setTitle(String.format(getString(R.string.dialog_confirm_action_title), action))
@@ -556,39 +552,39 @@ public class DeploymentsViewFragment extends SherlockListFragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int which) {
-                                ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.applyingAction);
+                                ProgressDialogFragment.showDialog(getActivity(), R.string.applyingAction);
 
                                 application.getOperationsManager().changeDeploymentStatus(deployment.getName(), group, !deployment.isEnabled(), new Callback() {
                                     @Override
                                     public void onSuccess(JsonElement reply) {
-                                        ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                                        ProgressDialogFragment.dismissDialog(getActivity());
 
                                         deployment.setEnabled(!deployment.isEnabled());
 
                                         ((DeploymentAdapter) getListAdapter()).notifyDataSetChanged();
 
-                                        Toast.makeText(getSherlockActivity(), getString(deployment.isEnabled() ?
+                                        Toast.makeText(getActivity(), getString(deployment.isEnabled() ?
                                                 R.string.deployment_enabled :
                                                 R.string.deployment_disabled), Toast.LENGTH_SHORT).show();
                                     }
 
                                     @Override
                                     public void onFailure(Exception e) {
-                                        ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                                        ProgressDialogFragment.dismissDialog(getActivity());
 
-                                        ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                                        ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
                                     }
                                 });
                             }
                         });
 
         ParameterizedDialogFragment dialog = new ParameterizedDialogFragment(alertDialog);
-        dialog.show(getSherlockActivity().getSupportFragmentManager(), null);
+        dialog.show(getActivity().getSupportFragmentManager(), null);
     }
 
     public void deleteDeployment(final Deployment deployment) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                getSherlockActivity());
+                getActivity());
 
         alertDialog
                 .setTitle(String.format(getString(R.string.dialog_confirm_action_title), getString(R.string.action_delete)))
@@ -601,41 +597,41 @@ public class DeploymentsViewFragment extends SherlockListFragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int which) {
-                                ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+                                ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
                                 application.getOperationsManager().removeDeployment(deployment.getName(), group, new Callback() {
                                     @Override
                                     public void onSuccess(JsonElement reply) {
-                                        ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                                        ProgressDialogFragment.dismissDialog(getActivity());
 
                                         deployments.remove(deployment);
 
-                                        Toast.makeText(getSherlockActivity(), getString(R.string.deployment_deleted), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), getString(R.string.deployment_deleted), Toast.LENGTH_SHORT).show();
 
                                         ((DeploymentAdapter) getListAdapter()).notifyDataSetChanged();
                                     }
 
                                     @Override
                                     public void onFailure(Exception e) {
-                                        ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                                        ProgressDialogFragment.dismissDialog(getActivity());
 
-                                        ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                                        ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
                                     }
                                 });
                             }
                         });
 
         ParameterizedDialogFragment dialog = new ParameterizedDialogFragment(alertDialog);
-        dialog.show(getSherlockActivity().getSupportFragmentManager(), null);
+        dialog.show(getActivity().getSupportFragmentManager(), null);
     }
 
     public void refresh() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchDeployments(group, new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 deployments.clear();
 
@@ -662,9 +658,9 @@ public class DeploymentsViewFragment extends SherlockListFragment {
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }
@@ -692,7 +688,7 @@ public class DeploymentsViewFragment extends SherlockListFragment {
 
     class DeploymentAdapter extends ArrayAdapter<Deployment> {
         DeploymentAdapter(List<Deployment> list) {
-            super(getSherlockActivity(), R.layout.deployment_row, R.id.deployment_name, list);
+            super(getActivity(), R.layout.deployment_row, R.id.deployment_name, list);
         }
 
         @Override

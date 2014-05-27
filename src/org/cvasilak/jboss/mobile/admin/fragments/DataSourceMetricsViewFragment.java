@@ -19,12 +19,13 @@ package org.cvasilak.jboss.mobile.admin.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
@@ -42,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DataSourceMetricsViewFragment extends SherlockListFragment {
+public class DataSourceMetricsViewFragment extends ListFragment {
 
     private static final String TAG = DataSourceMetricsViewFragment.class.getSimpleName();
 
@@ -74,7 +75,7 @@ public class DataSourceMetricsViewFragment extends SherlockListFragment {
         this.dsName = getArguments().getString("dsName");
         this.dsType = DataSourceType.valueOf(getArguments().getString("dsType"));
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         poolMetrics = new ArrayList<Metric>();
 
@@ -97,7 +98,7 @@ public class DataSourceMetricsViewFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         bar.setTitle(dsName);
 
         MergeAdapter adapter = new MergeAdapter();
@@ -105,29 +106,30 @@ public class DataSourceMetricsViewFragment extends SherlockListFragment {
         TextView sectionHeader;
 
         // Section: Pool Usage
-        sectionHeader = new TextView(getSherlockActivity());
+        sectionHeader = new TextView(getActivity());
         sectionHeader.setBackgroundColor(Color.DKGRAY);
         sectionHeader.setPadding(15, 10, 0, 10);
         sectionHeader.setText("Pool Usage");
         adapter.addView(sectionHeader);
 
-        MetricsAdapter poolMetricsAdapter = new MetricsAdapter(getSherlockActivity(), poolMetrics);
+        MetricsAdapter poolMetricsAdapter = new MetricsAdapter(getActivity(), poolMetrics);
         adapter.addAdapter(poolMetricsAdapter);
 
         // Section: Prepared Statement Pool Usage
-        sectionHeader = new TextView(getSherlockActivity());
+        sectionHeader = new TextView(getActivity());
         sectionHeader.setBackgroundColor(Color.DKGRAY);
         sectionHeader.setPadding(15, 10, 0, 10);
         sectionHeader.setText("Prepared Statement Pool Usage");
         adapter.addView(sectionHeader);
 
-        MetricsAdapter prepStatementMetricsAdapter = new MetricsAdapter(getSherlockActivity(), prepStatementMetrics);
+        MetricsAdapter prepStatementMetricsAdapter = new MetricsAdapter(getActivity(), prepStatementMetrics);
         adapter.addAdapter(prepStatementMetricsAdapter);
 
         setListAdapter(adapter);
     }
 
     @Override
+
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_refresh, menu);
 
@@ -146,12 +148,12 @@ public class DataSourceMetricsViewFragment extends SherlockListFragment {
     }
 
     public void refresh() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchDataSourceMetrics(this.dsName, this.dsType, new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 JsonObject jsonObj = reply.getAsJsonObject();
 
@@ -194,9 +196,9 @@ public class DataSourceMetricsViewFragment extends SherlockListFragment {
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }

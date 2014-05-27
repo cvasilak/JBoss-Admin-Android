@@ -24,15 +24,12 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -53,7 +50,7 @@ import java.util.Map;
 
 import static org.cvasilak.jboss.mobile.admin.net.JBossOperationsManager.HostStatus.*;
 
-public class RuntimeViewFragment extends SherlockListFragment {
+public class RuntimeViewFragment extends ListFragment {
 
     private static final String TAG = RuntimeViewFragment.class.getSimpleName();
 
@@ -73,7 +70,7 @@ public class RuntimeViewFragment extends SherlockListFragment {
 
         setRetainInstance(true);
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         // inform runtime that we have action buttons
         setHasOptionsMenu(true);
@@ -81,12 +78,12 @@ public class RuntimeViewFragment extends SherlockListFragment {
         // determine whether we are running in STANDALONE or DOMAIN mode
         // and update table view accordingly
         if (application.getOperationsManager().getDomainHost() == null) {
-            ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.fetchingDomainInfo);
+            ProgressDialogFragment.showDialog(getActivity(), R.string.fetchingDomainInfo);
 
             application.getOperationsManager().fetchActiveServerInformation(new Callback() {
                 @Override
                 public void onSuccess(JsonElement reply) {
-                    ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                    ProgressDialogFragment.dismissDialog(getActivity());
 
                     JsonObject hosts = reply.getAsJsonObject();
 
@@ -116,7 +113,7 @@ public class RuntimeViewFragment extends SherlockListFragment {
 
                 @Override
                 public void onFailure(Exception e) {
-                    ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                    ProgressDialogFragment.dismissDialog(getActivity());
 
                     // HTTP/1.1 500 Internal Server Error
                     // occurred doing :read-children-resources(child-type=host)
@@ -131,7 +128,7 @@ public class RuntimeViewFragment extends SherlockListFragment {
     public void onResume() {
         super.onResume();
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         bar.setTitle(application.getOperationsManager().getServer().getName());
     }
 
@@ -145,7 +142,7 @@ public class RuntimeViewFragment extends SherlockListFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.logout) {
-            ((JBossServerRootActivity) getSherlockActivity()).onBackPressed();
+            ((JBossServerRootActivity) getActivity()).onBackPressed();
             return (true);
         }
 
@@ -169,7 +166,7 @@ public class RuntimeViewFragment extends SherlockListFragment {
         // cater for domain mode and display a button
         // for the user to change the active server
         if (application.getOperationsManager().isDomainController()) {
-            chooseServer = new Button(getSherlockActivity());
+            chooseServer = new Button(getActivity());
             chooseServer.setText(application.getOperationsManager().getDomainHost() + ":" + application.getOperationsManager().getDomainServer());
             chooseServer.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_servers_selection, 0);
             chooseServer.setTypeface(null, Typeface.ITALIC);
@@ -185,7 +182,7 @@ public class RuntimeViewFragment extends SherlockListFragment {
 
         for (Map.Entry<String, List<String>> entry : table.entrySet()) {
             // add section header
-            TextView section = new TextView(getSherlockActivity());
+            TextView section = new TextView(getActivity());
             section.setBackgroundColor(Color.DKGRAY);
             section.setPadding(15, 10, 0, 10);
             section.setText(entry.getKey());
@@ -193,7 +190,7 @@ public class RuntimeViewFragment extends SherlockListFragment {
 
             // add section data
             adapter.addAdapter(new ArrayAdapter<String>(
-                    getSherlockActivity(),
+                    getActivity(),
                     android.R.layout.simple_list_item_1,
                     entry.getValue()));
         }
@@ -227,11 +224,11 @@ public class RuntimeViewFragment extends SherlockListFragment {
             fragment = DeploymentsViewFragment.newInstance(null, DeploymentsViewFragment.Mode.STANDALONE_MODE);
         }
 
-        ((JBossServerRootActivity) getSherlockActivity()).addFragment(fragment);
+        ((JBossServerRootActivity) getActivity()).addFragment(fragment);
     }
 
     public void showDomainHostChooser() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchDomainHostInfoInformation(new Callback() {
             @Override
@@ -246,10 +243,10 @@ public class RuntimeViewFragment extends SherlockListFragment {
                     return;
                 }
 
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 final ArrayAdapter<String> hosts = new ArrayAdapter<String>(
-                        getSherlockActivity(),
+                        getActivity(),
                         android.R.layout.simple_list_item_single_choice);
 
                 // will hold the default selection host position
@@ -268,7 +265,7 @@ public class RuntimeViewFragment extends SherlockListFragment {
                 }
 
                 AlertDialog.Builder hostsDialog = new AlertDialog.Builder(
-                        getSherlockActivity());
+                        getActivity());
 
                 hostsDialog.setTitle(R.string.select_host);
                 hostsDialog.setSingleChoiceItems(hosts, selPos, new DialogInterface.OnClickListener() {
@@ -290,26 +287,26 @@ public class RuntimeViewFragment extends SherlockListFragment {
                 hostsDialog.setCancelable(false);
 
                 ParameterizedDialogFragment dialog = new ParameterizedDialogFragment(hostsDialog);
-                dialog.show(getSherlockActivity().getSupportFragmentManager(), null);
+                dialog.show(getActivity().getSupportFragmentManager(), null);
             }
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }
 
     public void showDomainServersDialog(final String host, boolean showProgress) {
         if (showProgress)
-            ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+            ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchServersInformation(host, new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 hostAdapter = new HostAdapter();
 
@@ -327,7 +324,7 @@ public class RuntimeViewFragment extends SherlockListFragment {
                 }
 
                 AlertDialog.Builder serversDialog = new AlertDialog.Builder(
-                        getSherlockActivity());
+                        getActivity());
 
                 serversDialog.setTitle(R.string.select_server);
                 serversDialog.setSingleChoiceItems(hostAdapter, -1, new DialogInterface.OnClickListener() {
@@ -350,14 +347,14 @@ public class RuntimeViewFragment extends SherlockListFragment {
                 serversDialog.setCancelable(false);
 
                 ParameterizedDialogFragment dialog = new ParameterizedDialogFragment(serversDialog);
-                dialog.show(getSherlockActivity().getSupportFragmentManager(), null);
+                dialog.show(getActivity().getSupportFragmentManager(), null);
             }
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }
@@ -368,7 +365,7 @@ public class RuntimeViewFragment extends SherlockListFragment {
         final boolean start = actionStr.equals("Start");
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                getSherlockActivity());
+                getActivity());
 
         alertDialog
                 .setTitle(String.format(getString(R.string.dialog_confirm_action_title), actionStr))
@@ -382,12 +379,12 @@ public class RuntimeViewFragment extends SherlockListFragment {
                             public void onClick(DialogInterface dialog,
                                                 int which) {
 
-                                ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.applyingAction);
+                                ProgressDialogFragment.showDialog(getActivity(), R.string.applyingAction);
 
                                 application.getOperationsManager().changeStatus(server.belongingHost, server.name, start, new Callback() {
                                     @Override
                                     public void onSuccess(JsonElement reply) {
-                                        ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                                        ProgressDialogFragment.dismissDialog(getActivity());
 
                                         String status = reply.getAsString();
 
@@ -399,7 +396,7 @@ public class RuntimeViewFragment extends SherlockListFragment {
                                         if (!start && !status.equals("STOPPED"))
                                             error = true;
 
-                                        Toast.makeText(getSherlockActivity(), (error ?
+                                        Toast.makeText(getActivity(), (error ?
                                                 getString(R.string.failed)
                                                 : getString(R.string.success)),
                                                 Toast.LENGTH_SHORT)
@@ -416,21 +413,21 @@ public class RuntimeViewFragment extends SherlockListFragment {
 
                                     @Override
                                     public void onFailure(Exception e) {
-                                        ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                                        ProgressDialogFragment.dismissDialog(getActivity());
 
-                                        ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                                        ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
                                     }
                                 });
                             }
                         });
 
         ParameterizedDialogFragment dialog = new ParameterizedDialogFragment(alertDialog);
-        dialog.show(getSherlockActivity().getSupportFragmentManager(), null);
+        dialog.show(getActivity().getSupportFragmentManager(), null);
     }
 
     class HostAdapter extends ArrayAdapter<Server> {
         HostAdapter() {
-            super(getSherlockActivity(), R.layout.server_row, R.id.server_name);
+            super(getActivity(), R.layout.server_row, R.id.server_name);
         }
 
         @Override

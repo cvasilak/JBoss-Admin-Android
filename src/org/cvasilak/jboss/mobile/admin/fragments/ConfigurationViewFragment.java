@@ -17,18 +17,19 @@
 
 package org.cvasilak.jboss.mobile.admin.fragments;
 
+import android.support.v7.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.cvasilak.jboss.mobile.admin.JBossAdminApplication;
@@ -44,7 +45,7 @@ import org.cvasilak.jboss.mobile.admin.util.listview.adapters.MetricsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConfigurationViewFragment extends SherlockListFragment {
+public class ConfigurationViewFragment extends ListFragment {
 
     private static final String TAG = ConfigurationViewFragment.class.getSimpleName();
 
@@ -58,7 +59,7 @@ public class ConfigurationViewFragment extends SherlockListFragment {
 
         setRetainInstance(true);
 
-        application = (JBossAdminApplication) getSherlockActivity().getApplication();
+        application = (JBossAdminApplication) getActivity().getApplication();
 
         confMetrics = new ArrayList<Metric>();
 
@@ -75,7 +76,7 @@ public class ConfigurationViewFragment extends SherlockListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ActionBar bar = getSherlockActivity().getSupportActionBar();
+        ActionBar bar = ((ActionBarActivity) getActivity()).getSupportActionBar();
         bar.setTitle(getString(R.string.configuration));
 
         MergeAdapter adapter = new MergeAdapter();
@@ -83,23 +84,23 @@ public class ConfigurationViewFragment extends SherlockListFragment {
         TextView sectionHeader;
 
         // Section: Server Information
-        sectionHeader = new TextView(getSherlockActivity());
+        sectionHeader = new TextView(getActivity());
         sectionHeader.setBackgroundColor(Color.DKGRAY);
         sectionHeader.setPadding(15, 10, 0, 10);
         sectionHeader.setText("Server Information");
         adapter.addView(sectionHeader);
 
-        MetricsAdapter confMetricsAdapter = new MetricsAdapter(getSherlockActivity(), confMetrics);
+        MetricsAdapter confMetricsAdapter = new MetricsAdapter(getActivity(), confMetrics);
         adapter.addAdapter(confMetricsAdapter);
 
         // Section: Server Configuration
-        sectionHeader = new TextView(getSherlockActivity());
+        sectionHeader = new TextView(getActivity());
         sectionHeader.setBackgroundColor(Color.DKGRAY);
         sectionHeader.setPadding(15, 10, 0, 10);
         sectionHeader.setText("Server Configuration");
         adapter.addView(sectionHeader);
         adapter.addAdapter(new ArrayAdapter<String>(
-                getSherlockActivity(),
+                getActivity(),
                 android.R.layout.simple_list_item_1,
                 new String[]{"Extensions", "Properties"}));
 
@@ -136,16 +137,16 @@ public class ConfigurationViewFragment extends SherlockListFragment {
             fragment = new PropertiesViewFragment();
         }
 
-        ((JBossServerRootActivity) getSherlockActivity()).addFragment(fragment);
+        ((JBossServerRootActivity) getActivity()).addFragment(fragment);
     }
 
     public void refresh() {
-        ProgressDialogFragment.showDialog(getSherlockActivity(), R.string.queryingServer);
+        ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
         application.getOperationsManager().fetchConfigurationInformation(new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
                 JsonObject jsonObj = reply.getAsJsonObject();
 
@@ -158,9 +159,9 @@ public class ConfigurationViewFragment extends SherlockListFragment {
 
             @Override
             public void onFailure(Exception e) {
-                ProgressDialogFragment.dismissDialog(getSherlockActivity());
+                ProgressDialogFragment.dismissDialog(getActivity());
 
-                ErrorDialogFragment.showDialog(getSherlockActivity(), e.getMessage());
+                ErrorDialogFragment.showDialog(getActivity(), e.getMessage());
             }
         });
     }
