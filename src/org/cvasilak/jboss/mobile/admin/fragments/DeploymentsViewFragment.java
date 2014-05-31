@@ -17,13 +17,14 @@
 
 package org.cvasilak.jboss.mobile.admin.fragments;
 
-import android.support.v7.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -130,7 +131,7 @@ public class DeploymentsViewFragment extends ListFragment {
                 getListView().setItemChecked(position, true);
 
                 // Start the CAB using the ActionMode.Callback defined above
-                mActionMode = getActivity().startActionMode(new ActionModeCallback());
+                mActionMode = ((ActionBarActivity) getActivity()).startSupportActionMode(new ActionModeCallback());
 
                 return true;
             }

@@ -41,8 +41,8 @@
     <string name="success">Success!</string>
     <string name="failed">Failed!</string>
 
-    <string name="add_to_group_enable">Add to Group and Enable</string>
-    <string name="add_to_group">Add to Group</string>
+    <string name="add_to_group_enable">Add and Enable</string>
+    <string name="add_to_group">Add</string>
 
     <string name="click_to_edit">
         <i>Click to Edit</i>

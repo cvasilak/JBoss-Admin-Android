@@ -30,6 +30,13 @@ public class UploadCompletedActivity extends ActionBarActivity {
     private static final String TAG = UploadCompletedActivity.class.getSimpleName();
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.main);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -47,7 +54,7 @@ public class UploadCompletedActivity extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
 
         getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content,
+                .add(R.id.app_container,
                         DeploymentDetailsDialogFragment.newInstance(server, BYTES_VALUE, filename), TAG)
                 .commit();
     }
