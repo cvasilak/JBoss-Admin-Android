@@ -116,7 +116,6 @@ public class TalkToJBossServerTask extends AsyncTask<ParametersMap, Void, JsonEl
 
         } catch (Exception e) {
             this.exception = e;
-            cancel(true);
         }
 
         return null;
@@ -129,11 +128,20 @@ public class TalkToJBossServerTask extends AsyncTask<ParametersMap, Void, JsonEl
         if (callback == null)
             return;
 
-        if (reply == null)
-            callback.onFailure(new RuntimeException(context.getString(R.string.empty_response)));
+        if (this.exception != null) {
+            callback.onFailure(this.exception);
+            return;
+        }
 
-        if (!reply.isJsonObject())
+        if (reply == null) {
+            callback.onFailure(new RuntimeException(context.getString(R.string.empty_response)));
+            return;
+        }
+
+        if (!reply.isJsonObject()) {
             callback.onFailure(new RuntimeException(context.getString(R.string.invalid_response)));
+            return;
+        }
 
         // return the full response if the shouldProcessRequest flag is not set
         if (!shouldProcessRequest) {
@@ -159,11 +167,5 @@ public class TalkToJBossServerTask extends AsyncTask<ParametersMap, Void, JsonEl
                     callback.onFailure(new RuntimeException(elem.getAsJsonObject().get("domain-failure-description").toString()));
             }
         }
-    }
-
-    @Override
-    protected void onCancelled() {
-        if (callback != null)
-            callback.onFailure(this.exception);
     }
 }
