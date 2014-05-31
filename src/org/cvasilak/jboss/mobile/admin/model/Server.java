@@ -103,10 +103,6 @@ public class Server implements Parcelable {
         StringBuilder builder = new StringBuilder();
 
         builder.append(isSSLSecured ? "https://" : "http://");
-
-        if (username != null && password != null)
-            builder.append(username).append(":").append(password).append("@");
-
         builder.append(hostname).append(":").append(port);
 
         return builder.toString();

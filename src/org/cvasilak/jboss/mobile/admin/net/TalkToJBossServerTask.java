@@ -71,12 +71,8 @@ public class TalkToJBossServerTask extends AsyncTask<ParametersMap, Void, JsonEl
         this.jsonBuilder = ((JBossAdminApplication) context.getApplicationContext()).getJSONBuilder();
         this.jsonParser = ((JBossAdminApplication) context.getApplicationContext()).getJSONParser();
 
-        // enable digest authentication
-        if (server.getUsername() != null && !server.getUsername().equals("")) {
-            Credentials credentials = new UsernamePasswordCredentials(server.getUsername(), server.getPassword());
-
-            client.getCredentialsProvider().setCredentials(new AuthScope(server.getHostname(), server.getPort(), AuthScope.ANY_REALM), credentials);
-        }
+        Credentials credentials = new UsernamePasswordCredentials(server.getUsername(), server.getPassword());
+        client.getCredentialsProvider().setCredentials(new AuthScope(server.getHostname(), server.getPort(), AuthScope.ANY_REALM), credentials);
     }
 
     @Override

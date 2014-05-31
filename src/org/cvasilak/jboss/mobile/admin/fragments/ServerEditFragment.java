@@ -128,7 +128,9 @@ public class ServerEditFragment extends Fragment {
             if (item.getItemId() == R.id.save) {
                 if (name.getText().toString().equals("")
                         || hostname.getText().toString().equals("")
-                        || port.getText().toString().equals("")) {
+                        || port.getText().toString().equals("")
+                        || username.getText().toString().equals("")
+                        || password.getText().toString().equals("")) {
 
                     ErrorDialogFragment.showDialog(getActivity(), getString(R.string.not_enough_params));
 
@@ -146,14 +148,7 @@ public class ServerEditFragment extends Fragment {
                 server.setPort(Integer.parseInt(port.getText().toString()));
                 server.setSSLSecured(isSSLSecured.isChecked());
                 server.setUsername(username.getText().toString());
-
-                // try to urlencode password
-                try {
-                    String encodedPassword = URLEncoder.encode(password.getText().toString(), "UTF-8");
-                    server.setPassword(encodedPassword);
-                } catch (UnsupportedEncodingException e) {
-                    ErrorDialogFragment.showDialog(getActivity(), getString(R.string.error_on_password_save));
-                }
+                server.setPassword(password.getText().toString());
 
                 try {
                     serversManager.save();
