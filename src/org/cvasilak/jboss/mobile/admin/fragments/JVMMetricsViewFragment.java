@@ -180,7 +180,7 @@ public class JVMMetricsViewFragment extends ListFragment {
 
                 /* Memory */
                 long max, committed, init, used;
-                float usedPerc;
+                float usedPerc, committedPerc, initPerc;
 
                 // Heap Usage
                 JsonObject jsonHeapUsage = step1.getAsJsonObject("heap-memory-usage");
@@ -188,15 +188,16 @@ public class JVMMetricsViewFragment extends ListFragment {
 
                 max = jsonHeapUsage.getAsJsonPrimitive("max").getAsLong() / 1024 / 1024;
                 committed = jsonHeapUsage.getAsJsonPrimitive("committed").getAsLong() / 1024 / 1024;
+                committedPerc = (max != 0 ? ((float) committed / max) * 100 : 0);
                 init = jsonHeapUsage.getAsJsonPrimitive("init").getAsLong() / 1024 / 1024;
-
+                initPerc = (max != 0 ? ((float) init / max) * 100 : 0);
                 used = jsonHeapUsage.getAsJsonPrimitive("used").getAsLong() / 1024 / 1024;
                 usedPerc = (max != 0 ? ((float) used / max) * 100 : 0);
 
                 heapUsage.put("max", String.format("%d MB", max));
                 heapUsage.put("used", String.format("%d MB (%.0f%%)", used, usedPerc));
-                heapUsage.put("committed", String.format("%d MB", committed));
-                heapUsage.put("init", String.format("%d MB", init));
+                heapUsage.put("committed", String.format("%d MB (%.0f%%)", committed, committedPerc));
+                heapUsage.put("init", String.format("%d MB (%.0f%%)", init, initPerc));
 
                 for (Metric metric : heapMetrics) {
                     metric.setValue(heapUsage.get(metric.getKey()));
@@ -208,15 +209,16 @@ public class JVMMetricsViewFragment extends ListFragment {
 
                 max = jsonNonHeapUsage.getAsJsonPrimitive("max").getAsLong() / 1024 / 1024;
                 committed = jsonNonHeapUsage.getAsJsonPrimitive("committed").getAsLong() / 1024 / 1024;
+                committedPerc = (max != 0 ? ((float) committed / max) * 100 : 0);
                 init = jsonNonHeapUsage.getAsJsonPrimitive("init").getAsLong() / 1024 / 1024;
-
+                initPerc = (max != 0 ? ((float) init / max) * 100 : 0);
                 used = jsonNonHeapUsage.getAsJsonPrimitive("used").getAsLong() / 1024 / 1024;
                 usedPerc = (max != 0 ? ((float) used / max) * 100 : 0);
 
                 nonHeapUsage.put("max", String.format("%d MB", max));
                 nonHeapUsage.put("used", String.format("%d MB (%.0f%%)", used, usedPerc));
-                nonHeapUsage.put("committed", String.format("%d MB", committed));
-                nonHeapUsage.put("init", String.format("%d MB", init));
+                nonHeapUsage.put("committed", String.format("%d MB (%.0f%%)", committed, committedPerc));
+                nonHeapUsage.put("init", String.format("%d MB (%.0f%%)", init, initPerc));
 
                 for (Metric metric : nonHeapMetrics) {
                     metric.setValue(nonHeapUsage.get(metric.getKey()));
