@@ -240,7 +240,7 @@ public class ServersViewFragment extends ListFragment {
         fragmentManager.beginTransaction()
                 .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 .addToBackStack(null)
-                .replace(android.R.id.content, ServerEditFragment.newInstance(pos))
+                .replace(R.id.app_container, ServerEditFragment.newInstance(pos))
                 .commit();
     }
 

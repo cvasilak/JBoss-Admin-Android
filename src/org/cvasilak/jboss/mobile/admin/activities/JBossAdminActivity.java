@@ -19,6 +19,7 @@ package org.cvasilak.jboss.mobile.admin.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import org.cvasilak.jboss.mobile.admin.R;
 import org.cvasilak.jboss.mobile.admin.fragments.ServersViewFragment;
 
 /*
@@ -30,9 +31,11 @@ public class JBossAdminActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
+        setContentView(R.layout.main);
+
+        if (getSupportFragmentManager().findFragmentById(R.id.app_container) == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(android.R.id.content,
+                    .add(R.id.app_container,
                             new ServersViewFragment()).commit();
         }
     }
