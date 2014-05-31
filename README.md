@@ -2,7 +2,7 @@
 
 ### JBoss Admin _(for Android)_
 
-The app will allow you to remotely administer a JBoss 7 or JBoss EAP 6.1 server using the server's exposed http management interface.
+The app will allow you to remotely administer a JBoss 7, WildFly or JBoss EAP using the server's exposed http management interface.
 
 Features
 --------
@@ -27,7 +27,7 @@ Click [here][1] to watch a video demonstrating the app in "action".
 
 For instructions on how to setup JBoss Tools to allow connections from the app, click [here][3] for the details (thanks [Max][2]!)
 
-The application supports both *Android 2.3.3 Gingerbread (API 10)* and *4.2 Jelly Ben (API 17)*.
+The application supports both *Android 2.3.3 Gingerbread (API 10)* and *4.4 KitKat (API 19)*.
 
 Development
 -----------
