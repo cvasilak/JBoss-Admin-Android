@@ -33,6 +33,13 @@ public class JBossOperationsManager {
     private String domainHost;
     private String domainServer;
 
+    public static enum ManagementVersion {
+        MANAGEMENT_VERSION_1,
+        MANAGEMENT_VERSION_2
+    }
+
+    public ManagementVersion version;
+
     private boolean isDomainController;
 
     public static enum DataSourceType {
@@ -69,6 +76,12 @@ public class JBossOperationsManager {
 
     public String getDomainServer() {
         return domainServer;
+    }
+
+    public ManagementVersion getVersion() { return version; }
+
+    public void setVersion(int version) {
+        this.version = version == 1? ManagementVersion.MANAGEMENT_VERSION_1: ManagementVersion.MANAGEMENT_VERSION_2;
     }
 
     public boolean isDomainController() {
@@ -116,10 +129,10 @@ public class JBossOperationsManager {
         return address;
     }
 
-    public void fetchJBossVersion(final Callback callback) {
+    public void fetchJBossManagementVersion(final Callback callback) {
         ParametersMap params = ParametersMap.newMap()
                 .add("operation", "read-attribute")
-                .add("name", "release-version");
+                .add("name", "management-major-version");
 
         TalkToJBossServerTask task = new TalkToJBossServerTask(context, server, callback);
         task.execute(params);

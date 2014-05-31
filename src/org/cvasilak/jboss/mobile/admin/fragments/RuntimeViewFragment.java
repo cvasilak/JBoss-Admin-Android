@@ -40,13 +40,11 @@ import org.cvasilak.jboss.mobile.admin.fragments.dialogs.ErrorDialogFragment;
 import org.cvasilak.jboss.mobile.admin.fragments.dialogs.ParameterizedDialogFragment;
 import org.cvasilak.jboss.mobile.admin.fragments.dialogs.ProgressDialogFragment;
 import org.cvasilak.jboss.mobile.admin.net.Callback;
+import org.cvasilak.jboss.mobile.admin.net.JBossOperationsManager;
 import org.cvasilak.jboss.mobile.admin.net.JBossOperationsManager.HostStatus;
 import org.cvasilak.jboss.mobile.admin.util.commonsware.MergeAdapter;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.cvasilak.jboss.mobile.admin.net.JBossOperationsManager.HostStatus.*;
 
@@ -153,7 +151,15 @@ public class RuntimeViewFragment extends ListFragment {
         Map<String, List<String>> table = new HashMap<String, List<String>>();
 
         table.put("Server Status", Arrays.asList("Configuration", "JVM"));
-        table.put("Subsystem Metrics", Arrays.asList("Data Sources", "JMS Destinations", "Transactions", "Web"));
+
+        List<String> metrics = new ArrayList<String>(Arrays.asList("Data Sources", "JMS Destinations", "Transactions"));
+        // 'Web' section metrics is compatible (for now) only with MANAGEMENT_VERSION_1
+        // TODO ('Undertow' subsystem metrics can possible replace)
+        if (application.getOperationsManager().getVersion() == JBossOperationsManager.ManagementVersion.MANAGEMENT_VERSION_1) {
+            metrics.add("Web");
+        }
+
+        table.put("Subsystem Metrics", metrics);
 
         if (application.getOperationsManager().isDomainController()) {
             table.put("Deployments", Arrays.asList("Deployment Content", "Server Groups"));

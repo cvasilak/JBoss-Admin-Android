@@ -215,11 +215,18 @@ public class ServersViewFragment extends ListFragment {
 
         ProgressDialogFragment.showDialog(getActivity(), R.string.queryingServer);
 
-        application.getOperationsManager().fetchJBossVersion(new Callback() {
+        application.getOperationsManager().fetchJBossManagementVersion(new Callback() {
             @Override
             public void onSuccess(JsonElement reply) {
                 ProgressDialogFragment.dismissDialog(getActivity());
 
+                // extract the version
+                int version = reply.getAsJsonPrimitive().getAsInt();
+
+                // set it for any subsequent calls
+                application.getOperationsManager().setVersion(version);
+
+                // time to show home page
                 Intent i = new Intent(getActivity(),
                         JBossServerRootActivity.class);
 
