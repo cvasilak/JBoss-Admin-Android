@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.cvasilak.jboss.mobile.admin"
+          package="org.cvasilak.jboss.mobile.app"
           android:versionCode="2"
           android:versionName="1.1">
 
@@ -14,12 +14,12 @@
     <application
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name"
-            android:name="JBossAdminApplication"
+            android:name="org.cvasilak.jboss.mobile.app.JBossAdminApplication"
             android:theme="@style/Theme.AppCompat"
             android:allowBackup="true">
 
         <activity
-                android:name=".activities.JBossAdminActivity"
+                android:name="org.cvasilak.jboss.mobile.app.activities.JBossAdminActivity"
                 android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -27,15 +27,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.JBossServerRootActivity"
+        <activity android:name="org.cvasilak.jboss.mobile.app.activities.JBossServerRootActivity"
                   android:windowSoftInputMode="adjustPan"/>
 
-        <activity android:name=".activities.UploadCompletedActivity"
+        <activity android:name="org.cvasilak.jboss.mobile.app.activities.UploadCompletedActivity"
                   android:launchMode="singleTask"
                   android:taskAffinity=""
                   android:excludeFromRecents="true"/>
 
-        <service android:name=".service.UploadToJBossServerService"/>
+        <service android:name="org.cvasilak.jboss.mobile.app.service.UploadToJBossServerService"/>
 
     </application>
 
