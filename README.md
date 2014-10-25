@@ -47,7 +47,7 @@ Enjoy!
 
 
 [0]: http://www.cvasilak.org/images/jboss-admin-logo.png "JBoss Admin"
-[1]: https://vimeo.com/70296958
+[1]: https://vimeo.com/110015199
 [2]: https://twitter.com/#!/maxandersen
 [3]: http://planet.jboss.org/post/using_jboss_admin_iphone_app_together_with_jboss_tools
 [4]: mailto:cvasilak@gmail.gom?subject=JBoss-Admin(Android)
